@@ -7,6 +7,8 @@ ARG TARGETARCH
 ARG RUNNER_VERSION=2.310.2
 ARG RUNNER_CONTAINER_HOOKS_VERSION=0.3.2
 ARG DOCKER_VERSION=23.0.6
+ARG NODE_VERSION=18.18.2
+ARG RUBY_VERSION=3.2.2
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -y \
@@ -73,7 +75,7 @@ RUN mkdir /opt/hostedtoolcache \
     && chown runner:docker /opt/hostedtoolcache
 
 # We pre-install nodejs to reduce time of setup-node and improve its reliability.
-ENV NODE_VERSION 18.18.2
+# NODE_VERSION can be overridden via build arg
 
 RUN if [ "${TARGETARCH}" = "amd64" ]; then export NODE_ARCH=x64 ; else export NODE_ARCH=${TARGETARCH} ; fi; \
     mkdir -p /opt/hostedtoolcache/node/${NODE_VERSION}/${NODE_ARCH} && \
@@ -110,7 +112,7 @@ if (expected[0] == '') {
 }
 EOF
 
-ENV RUBY_VERSION 3.2.2
+# RUBY_VERSION can be overridden via build arg
 RUN if [ "${TARGETARCH}" = "amd64" ]; then export RUBY_ARCH=x64 ; else export RUBY_ARCH=${TARGETARCH} ; fi; \
     git clone https://github.com/rbenv/ruby-build.git && \
     ./ruby-build/install.sh && \
