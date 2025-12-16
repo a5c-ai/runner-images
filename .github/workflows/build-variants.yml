@@ -60,9 +60,14 @@ jobs:
       - name: Generate image tags
         id: tags
         run: |
-          TAG_SUFFIX="node${{ github.event.inputs.node_version }}-ruby${{ github.event.inputs.ruby_version }}"
+          # Sanitize version strings for Docker tag compatibility (alphanumeric, dots, hyphens, underscores)
+          NODE_VER=$(echo "${{ github.event.inputs.node_version }}" | tr -cd '[:alnum:]._-')
+          RUBY_VER=$(echo "${{ github.event.inputs.ruby_version }}" | tr -cd '[:alnum:]._-')
+          TAG_SUFFIX="node${NODE_VER}-ruby${RUBY_VER}"
+          
           if [ -n "${{ github.event.inputs.image_tag }}" ]; then
-            CUSTOM_TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.image_tag }}"
+            CUSTOM_TAG_SANITIZED=$(echo "${{ github.event.inputs.image_tag }}" | tr -cd '[:alnum:]._-')
+            CUSTOM_TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${CUSTOM_TAG_SANITIZED}"
             echo "tags=${CUSTOM_TAG}" >> $GITHUB_OUTPUT
           else
             DEFAULT_TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${TAG_SUFFIX}"

@@ -66,22 +66,24 @@ Run this workflow from the Actions tab to build a custom variant:
 
 After the workflows complete, images are available at:
 ```
-ghcr.io/a5c-ai/runner-images:<tag>
+ghcr.io/<OWNER>/<REPO>:<tag>
 ```
+
+Replace `<OWNER>/<REPO>` with your repository path (e.g., `a5c-ai/runner-images`).
 
 ### Example: Pull the latest image
 ```bash
-docker pull ghcr.io/a5c-ai/runner-images:latest
+docker pull ghcr.io/<OWNER>/<REPO>:latest
 ```
 
 ### Example: Pull a specific version
 ```bash
-docker pull ghcr.io/a5c-ai/runner-images:v1.0.0
+docker pull ghcr.io/<OWNER>/<REPO>:v1.0.0
 ```
 
 ### Example: Pull a custom variant
 ```bash
-docker pull ghcr.io/a5c-ai/runner-images:node18.18.2-ruby3.2.2
+docker pull ghcr.io/<OWNER>/<REPO>:node18.18.2-ruby3.2.2
 ```
 
 ## Registry Permissions

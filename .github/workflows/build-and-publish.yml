@@ -29,6 +29,9 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  DEFAULT_RUNNER_VERSION: '2.310.2'
+  DEFAULT_RUNNER_CONTAINER_HOOKS_VERSION: '0.3.2'
+  DEFAULT_DOCKER_VERSION: '23.0.6'
 
 jobs:
   build-and-push:
@@ -37,13 +40,6 @@ jobs:
       contents: read
       packages: write
       id-token: write
-
-    strategy:
-      matrix:
-        include:
-          - base_image: "mcr.microsoft.com/dotnet/runtime-deps:6.0-focal"
-            image_suffix: "ubuntu20"
-            image_os: "ubuntu20"
 
     steps:
       - name: Checkout repository
@@ -90,9 +86,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            RUNNER_VERSION=${{ github.event.inputs.runner_version || '2.310.2' }}
-            RUNNER_CONTAINER_HOOKS_VERSION=${{ github.event.inputs.runner_container_hooks_version || '0.3.2' }}
-            DOCKER_VERSION=${{ github.event.inputs.docker_version || '23.0.6' }}
+            RUNNER_VERSION=${{ github.event.inputs.runner_version || env.DEFAULT_RUNNER_VERSION }}
+            RUNNER_CONTAINER_HOOKS_VERSION=${{ github.event.inputs.runner_container_hooks_version || env.DEFAULT_RUNNER_CONTAINER_HOOKS_VERSION }}
+            DOCKER_VERSION=${{ github.event.inputs.docker_version || env.DEFAULT_DOCKER_VERSION }}
 
       - name: Generate artifact attestation
         if: github.event_name != 'pull_request'
