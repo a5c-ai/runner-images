@@ -153,7 +153,7 @@ EOF
 
 RUN apt-get update && apt-get install -y \
     git curl wget unzip jq python3 python3-pip build-essential \
-    clang cmake docker.io docker-compose nodejs npm yarn ruby ruby-dev \
+    clang cmake \
     openjdk-17-jdk maven gradle ant \
     ripgrep
     
