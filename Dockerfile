@@ -151,6 +151,38 @@ if (expected[0] == '') {
 }
 EOF
 
+RUN apt-get update && apt-get install -y \
+    git curl wget unzip jq python3 python3-pip build-essential \
+    clang cmake docker.io docker-compose nodejs npm yarn ruby ruby-dev \
+    openjdk-17-jdk maven gradle ant \
+    ripgrep
+    
+# Install GitHub CLI
+RUN type -p curl >/dev/null || apt-get install curl -y && \
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
+    dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) \
+    signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] \
+    https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    apt update && apt install gh -y
+
+# AWS CLI (v2)
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && \
+    unzip /tmp/awscliv2.zip -d /tmp && \
+    /tmp/aws/install
+
+# Google Cloud CLI
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
+    http://packages.cloud.google.com/apt cloud-sdk main" | \
+    tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    apt-get install apt-transport-https ca-certificates -y && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | \
+    apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
+    apt-get update && apt-get install google-cloud-sdk -y
+
+# Azure CLI
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
 COPY entrypoint.sh /
 
 VOLUME /var/lib/docker
