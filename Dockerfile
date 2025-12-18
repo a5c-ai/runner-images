@@ -29,7 +29,8 @@ RUN apt-get update -y \
         libyaml-dev \
         # dockerd dependencies
         tini \
-        iptables
+        iptables \
+        gnupg
 
 # KEEP LESS PACKAGES:
 # We'd like to keep this image small for maintanability and security.
